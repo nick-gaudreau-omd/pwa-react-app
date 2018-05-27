@@ -91,3 +91,38 @@ function fetchAndUpdate(request) {
         });
 
 }
+
+self.registration.showNotification("Welcome to Offline News", {
+    body: "News can be saved for later read. Also once a page have been visited, when offline this page will still be available.",
+    image: "/news-notif.jpg",
+    icon: "/android-chrome-192x192.png",
+    badge: "/android-chrome-192x192.png",
+    actions:[
+        {
+            action: "ok", title: "Ok", icon: "/favicon-32x32.png"
+        },
+        {
+            action: "rate", title: "Rate", icon: "/favicon-32x32.png"
+        }
+    ]
+});
+
+self.addEventListener('notificationclose', evt => {
+    // do somthing... ping ggole analytics see if user intereacted with notif
+    console.log('notificationclose');
+});
+
+self.addEventListener('notificationclick', evt => {
+    evt.notification.close();
+
+    switch(evt.action) { // switch case on action prop sort of an id
+        case 'ok':
+            console.log('notificationclick => Ok');
+            break;
+        case 'rate':
+            console.log('notificationclick => Rate');
+            break;
+        default:
+            break;
+    }
+});
