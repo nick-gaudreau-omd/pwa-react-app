@@ -106,7 +106,7 @@ class App extends React.Component<{}, {}> {
       <div>
         {this.isOffline() ? <h3 className="offline-h3"> Offline experience </h3> : ''}
         <div className="cover-container d-flex h-100 p-3 mx-auto flex-column">
-          {this.isOffline() ? <NavOffline /> : <Nav />}
+          {this.isOffline() ? <NavOffline /> : <Nav />}          
           {/* <Routes touchMoveHandler={this.touchMoveHandler} /> */}
           <Routes />
         </div>

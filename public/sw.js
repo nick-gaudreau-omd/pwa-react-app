@@ -92,6 +92,8 @@ function fetchAndUpdate(request) {
 
 }
 
+
+/* Web Notifications */
 self.registration.showNotification("Welcome to Offline News", {
     body: "News can be saved for later read. Also once a page have been visited, when offline this page will still be available.",
     image: "/news-notif.jpg",

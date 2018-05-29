@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import App from './App';
-import LocalServiceWorkerRegister from './local-sw-register';
+//import LocalServiceWorkerRegister from './local-sw-register';
 import registerServiceWorker from './registerServiceWorker';
 // import 'bootswatch/dist/darkly/bootstrap.min.css';
 import 'bootswatch/dist/materia/bootstrap.min.css';
@@ -17,6 +17,6 @@ ReactDOM.render(
   document.getElementById('root') as HTMLElement
 );
 
-LocalServiceWorkerRegister();
+//LocalServiceWorkerRegister();
 registerServiceWorker();
 

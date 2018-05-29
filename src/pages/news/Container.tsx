@@ -3,6 +3,7 @@ import { Article } from '../../model/Article';
 import { NewsService } from '../../service/NewsService';
 import ArticleList from '../../components/ArticleList';
 import { NewsContainerState } from './ContainerState';
+import Notification from '../../components/Notification';
 //import { Redirect } from 'react-router';
 
 export default class NewsContainer extends React.Component<{ match:any}, NewsContainerState> {
@@ -32,9 +33,6 @@ export default class NewsContainer extends React.Component<{ match:any}, NewsCon
         this.setState({ articles: articles });
       });
     }
-
-
-
   }
 
   componentWillReceiveProps(newProps:any){
@@ -45,7 +43,7 @@ export default class NewsContainer extends React.Component<{ match:any}, NewsCon
       
     }
 
-  }
+  }  
 
   public render() {  
 
@@ -54,6 +52,7 @@ export default class NewsContainer extends React.Component<{ match:any}, NewsCon
         <br />
         <h2>
           {this.state.category.toUpperCase()}
+          <Notification />
         </h2>
         <hr />
         <ArticleList articles={this.state.articles} />
