@@ -1,10 +1,11 @@
 import * as React from 'react';
 import * as FontAwesome from 'react-icons/lib/fa';
+import Util from '../Util';
 // bypass transpiler error for known type : interface Notification extends EventTarget
 declare var Notification: any; // C:\Program Files\Microsoft VS Code\resources\app\extensions\node_modules\typescript\lib\lib.dom.d.ts
 
 const pubKey = "BDL1okxySceuOI-i-4KMTDDRymnDtL_JTIzQyBHKkrNT0WHlBXLlmHnYegRecNmMQIOR06aR0wA1LOWlit75QlE";
-// ref privKey: fkbcr5dRSi0UGJt2pQSzT-iH1b6cjt5Tu3ce02KOf1E
+// ref dev code only => privKey: fkbcr5dRSi0UGJt2pQSzT-iH1b6cjt5Tu3ce02KOf1E
 
 export default class NotificationComponent extends React.Component<{}, {subscribed:boolean}> {
 
@@ -14,38 +15,76 @@ export default class NotificationComponent extends React.Component<{}, {subscrib
             subscribed: false
         }
         this.hasSubscribed = this.hasSubscribed.bind(this);
-        
+        this.handleSubscriptionClick = this.handleSubscriptionClick.bind(this);
     }
 
-    componentDidMount(){
-        this.setState({subscribed : this.hasSubscribed()});
+    async componentDidMount() {
+        this.hasSubscribed();        
     }
 
-    hasSubscribed(): boolean {
+    hasSubscribed() {
         if ('serviceWorker' in navigator && 'PushManager' in window) {
             
             // quick out
-            if(Notification.permission === "denied") return false;
-            else if(Notification.permission === "granted") return true;
+            if(Notification.permission === "denied") this.setState({subscribed : false});
             
             console.log(Notification.permission);
 
-            // Case permission is default/ask
+            // Case permission is 'default/ask' or 'granted'
             // access sw when its up and ready
             navigator.serviceWorker.ready.then( sw => {
                 // check user subscription
                 sw.pushManager.getSubscription().then( pushSubscription => {
-                    if(pushSubscription === null) return false;
-                    else return true;
+                    if(pushSubscription === null) return this.setState({subscribed : false});
+                    else return this.setState({subscribed : true});
                 });
             }).catch(error => {
-                console.error(error);
-                return false;
+                console.error(error);                
             });            
         }
-        return false;
+        return this.setState({subscribed : false});
     }
 
+    handleSubscriptionClick() {
+        // access sw when its up and ready
+        navigator.serviceWorker.ready.then( sw => {
+            // check user subscription
+            sw.pushManager.getSubscription().then( pushSubscription => {
+                if(pushSubscription !== null) { 
+                    // UNSUBSCRIBE
+                    // Suppose to remove subscription from user browser AND message server... 
+                    // AFTER TEST IT SEEMS THAT IT ONLY REMOVES MESSAGE SERVER, user browser will still be on allow
+                    pushSubscription.unsubscribe(); 
+                    
+                    
+                    // TODO if we have one, remove subscription on web server if any for this user (i.e persisted subscription)
+                    
+                    this.setState({subscribed : false});
+                }
+                else{
+                    // SUBSCRIBE
+                    sw.pushManager.subscribe({
+                        userVisibleOnly: true,
+                        applicationServerKey: Util.urlBase64ToUint8Array(pubKey)
+                    }) 
+                    // then sync our web server... if we have one                
+                    // .then(
+                    //     s => fetch('api/subscription', {
+                    //         headers: {'Content-Type': 'application/json'},
+                    //         method: 'POST',
+                    //         credentials: 'same-origin',
+                    //         body: JSON.stringify(s)
+                    //     })
+                    // )
+                    .then(res => {
+                        this.setState({subscribed : true});
+                    });
+                }
+            });
+        }).catch(error => {
+            console.error(error);
+        }); 
+    }
 
     render() {
         return (
@@ -53,9 +92,9 @@ export default class NotificationComponent extends React.Component<{}, {subscrib
                 {/* <FontAwesome.FaRefresh id="btnRefresh" style={ { cursor: "pointer"} } /> */}
                 {
                     this.state.subscribed ?
-                        <FontAwesome.FaBellO style={{ cursor: "pointer" }}  />
+                        <FontAwesome.FaBellO style={{ cursor: "pointer" }} onClick={this.handleSubscriptionClick} />
                         :
-                        <FontAwesome.FaBellSlashO style={{ cursor: "pointer" }}  />
+                        <FontAwesome.FaBellSlashO style={{ cursor: "pointer" }} onClick={this.handleSubscriptionClick} />
                 }
             </span>
 
