@@ -93,12 +93,12 @@ function fetchAndUpdate(request) {
 }
 
 
-/* Web Notifications */
+/* Notifications */
 self.registration.showNotification("Welcome to Offline News", {
-    body: "News can be saved for later read. Also once a page have been visited, when offline this page will still be available.",
-    image: "/news-notif.jpg",
+    body: "Save news for later read and/or once a page has been visited, it is available offline.",
+    image: "/ss-network-falling-back-to-cache.png",
     icon: "/android-chrome-192x192.png",
-    badge: "/android-chrome-192x192.png",
+    badge: "/favicon-32x32.png",
     actions:[
         {
             action: "ok", title: "Ok", icon: "/favicon-32x32.png"
