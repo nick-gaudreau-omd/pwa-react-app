@@ -7,9 +7,7 @@ const cachedAssets = [
     'safari-pinned-tab.svg',
     'apple-touch-icon.png',
     'offline/css/offline-main.css',
-    'offline/css/offline-main.css.map',
     'offline/js/offline-main.js',
-    'offline/js/offline-main.js.map',
     'offline-index.html'
 ];
 
@@ -115,7 +113,7 @@ self.registration.showNotification("Welcome to Offline News", {
             action: "ok", title: "Ok", icon: "/favicon-32x32.png"
         },
         {
-            action: "rate", title: "Rate", icon: "/favicon-32x32.png"
+            action: "survey", title: "Survey", icon: "/favicon-32x32.png"
         }
     ],
     tag: 'onload'
@@ -133,8 +131,13 @@ self.addEventListener('notificationclick', evt => {
         case 'ok':
             console.log('notificationclick => Ok');
             break;
-        case 'rate':
-            console.log('notificationclick => Rate');
+        case 'survey':
+            console.log('notificationclick => Survey');
+            evt.waitUntil(
+                clients.openWindow(
+                    `${evt.target.location.origin}/survey`
+                )
+            );
             break;
         default:
             break;
