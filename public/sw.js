@@ -1,16 +1,16 @@
 const CACHE_VERSION = 'offline-react-web-app-v1.2';
 
 const cachedAssets = [
-    '/favicon.ico',
-    '/favicon-32x32.png',
-    '/favicon-16x16.png',
-    '/safari-pinned-tab.svg',
-    '/apple-touch-icon.png',
-    '/offline/css/offline-main.css',
-    '/offline/css/offline-main.css.map',
-    '/offline/js/offline-main.js',
-    '/offline/js/offline-main.js.map',
-    '/offline-index.html'
+    'favicon.ico',
+    'favicon-32x32.png',
+    'favicon-16x16.png',
+    'safari-pinned-tab.svg',
+    'apple-touch-icon.png',
+    'offline/css/offline-main.css',
+    'offline/css/offline-main.css.map',
+    'offline/js/offline-main.js',
+    'offline/js/offline-main.js.map',
+    'offline-index.html'
 ];
 
 self.addEventListener('install', function (event) {
@@ -55,12 +55,12 @@ self.addEventListener('fetch', function (event) {
                     if (response)
                         return response; // if there's a resp store in cache we return
                     else {  // offline and no cached response                       
-                        caches.match(new Request('/offline/offline-index.html')).then(function (response) {    
+                        caches.match(new Request('offline-index.html')).then(function (response) {    
                             console.log(response);    
                             if (response)
                                 return response;
-                            else
-                             return new Response("<h1> It seems like you never opened this site online before !? :( </h1>");
+                            else // 
+                                return new Response("<h1> Offline and no cache !? Sorry :'( </h1>");
                         });                        
                     }
                 })
@@ -70,6 +70,11 @@ self.addEventListener('fetch', function (event) {
 });
 
 function fetchAndUpdate(request) {
+    // error: Uncaught (in promise) TypeError: Failed to execute 'fetch' on 'ServiceWorkerGlobalScope': 'only-if-cached' can be set only with 'same-origin' mode
+    // work around: https://stackoverflow.com/questions/48463483/what-causes-a-failed-to-execute-fetch-on-serviceworkerglobalscope-only-if?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+    if (request.cache === 'only-if-cached' && request.mode !== 'same-origin') {
+        return;
+    }
     return fetch(request)
         .then(function (response) {            
             console.log(response); 

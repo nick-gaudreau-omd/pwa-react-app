@@ -12,11 +12,12 @@ class Routes extends React.Component<{ }, {}> {
                 <Switch>
                     {/* {this.routeCollection} */}
                     {/* <Route exact={true} path='/' component={General} /> */}
-                    {/* <Route path='/general/:category' render={ (props) => <General {...this.props} />  }  /> */}
+                    {/* <Route path='/general/:category' render={ (props) => <General {...this.props} />  }  /> */}                    
                     <Route path='/news/:category' component={NewsContainer} />
                     <Route path='/content/:value' component={NewsContent} />
                     <Route path='/survey' component={Survey} />
-                    <Redirect to="/news/general" />
+                    <Route path='/' component={NewsContainer} />
+                    <Redirect to="/" />
                 </Switch>
             </div>
         );
