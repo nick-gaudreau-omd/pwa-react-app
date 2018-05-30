@@ -1,4 +1,18 @@
-const CACHE_VERSION = 'offline-react-web-app-v1.0';
+const CACHE_VERSION = 'offline-react-web-app-v1.2';
+
+const cachedAssets = [
+    '/favicon.ico',
+    '/favicon-32x32.png',
+    '/favicon-16x16.png',
+    '/safari-pinned-tab.svg',
+    '/apple-touch-icon.png',
+    '/offline/css/offline-main.css',
+    '/offline/css/offline-main.css.map',
+    '/offline/js/offline-main.js',
+    '/offline/js/offline-main.js.map',
+    '/offline-index.html'
+];
+
 self.addEventListener('install', function (event) {
   console.log(`Installed: ${CACHE_VERSION}, ${new Date().toLocaleTimeString()}`);
 });
@@ -40,22 +54,14 @@ self.addEventListener('fetch', function (event) {
                     console.log(response);    
                     if (response)
                         return response; // if there's a resp store in cache we return
-                    else {
-                        // test - if api request
-                        // did not work as expected... will simply disable anchor not in cache
-                        if(event.request.url.indexOf('newsapi.org') > -1){
-                            caches.match(new Request('https://newsapi.org/v2/top-headlines?language=en&country=us&apiKey=9933f02648834737bc4dd4f7c48cba94&sortBy=publishedAt&category=general')).then(function (response) {    
-                                console.log(response);    
-                                if (response)
-                                    return response;
-                            });
-                        } else { // this should be an offline page if website called for first time while offline
-                            caches.match(new Request('/')).then(function (response) {    
-                                console.log(response);    
-                                if (response)
-                                    return response;
-                            });
-                        }
+                    else {  // offline and no cached response                       
+                        caches.match(new Request('/offline/offline-index.html')).then(function (response) {    
+                            console.log(response);    
+                            if (response)
+                                return response;
+                            else
+                             return new Response("<h1> It seems like you never opened this site online before !? :( </h1>");
+                        });                        
                     }
                 })
         )
@@ -106,7 +112,8 @@ self.registration.showNotification("Welcome to Offline News", {
         {
             action: "rate", title: "Rate", icon: "/favicon-32x32.png"
         }
-    ]
+    ],
+    tag: 'onload'
 });
 
 self.addEventListener('notificationclose', evt => {

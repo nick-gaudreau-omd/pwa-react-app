@@ -11,7 +11,7 @@ class NavOffline extends React.Component<{}, {}> {
     }
 
     componentDidMount(){
-        caches.open('offline-react-web-app-v1.0')
+        caches.open('offline-react-web-app-v1.2')
             .then(c => c.keys())
             .then(keys => {
                 console.log(keys);
