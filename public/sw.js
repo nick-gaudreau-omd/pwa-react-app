@@ -12,8 +12,16 @@ const cachedAssets = [
 ];
 
 self.addEventListener('install', function (event) {
+    event.waitUntil(
+        caches.open(CACHE_VERSION)
+            .then(function (cache) {
+                return cache.addAll(cachedAssets);
+            })
+
+    );
   console.log(`Installed: ${CACHE_VERSION}, ${new Date().toLocaleTimeString()}`);
 });
+
 self.addEventListener('activate', function (event) {
   console.log(`Activated: ${CACHE_VERSION}, ${new Date().toLocaleTimeString()}`);
   event.waitUntil(
