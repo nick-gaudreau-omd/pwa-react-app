@@ -17,6 +17,7 @@ export default class Dashboard extends React.Component<{}, {}> {
     }
 
     // Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource 
+    // GCM API does not include CORS headers so it is not intended to be used from the browser
     // https://stackoverflow.com/questions/36662561/how-to-make-a-request-to-gcm-to-send-a-notification-via-xhr/36894224#36894224
     // https://stackoverflow.com/questions/36691533/how-to-send-push-notifications-in-chromeprogressive-web-apps/36717282#36717282
     handleClick() {
