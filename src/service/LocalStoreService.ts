@@ -9,7 +9,7 @@ export class LocalStoreService {
         }
     }
 
-    public static persistData(data: any, key: string) {
+    public static persistData(key: string, data: any ) {
         sessionStorage.setItem(key, JSON.stringify(data));
     }
 }

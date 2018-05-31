@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as FontAwesome from 'react-icons/lib/fa';
 import Util from '../Util';
+import { LocalStoreService } from '../service/LocalStoreService';
 // bypass transpiler error for known type : interface Notification extends EventTarget
 declare var Notification: any; // C:\Program Files\Microsoft VS Code\resources\app\extensions\node_modules\typescript\lib\lib.dom.d.ts
 
@@ -67,7 +68,7 @@ export default class NotificationComponent extends React.Component<{}, {subscrib
                         userVisibleOnly: true,
                         applicationServerKey: Util.urlBase64ToUint8Array(pubKey)
                     }) 
-                    // then sync our web server... if we have one                
+                    // then sync our server... if we have one                
                     // .then(
                     //     s => fetch('api/subscription', {
                     //         headers: {'Content-Type': 'application/json'},
@@ -76,7 +77,9 @@ export default class NotificationComponent extends React.Component<{}, {subscrib
                     //         body: JSON.stringify(s)
                     //     })
                     // )
-                    .then(res => {
+                    .then(res => {                        
+                        // demo solution store locally
+                        LocalStoreService.persistData("pushSubscription", res);
                         this.setState({subscribed : true});
                     });
                 }

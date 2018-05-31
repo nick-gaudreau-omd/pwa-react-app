@@ -2,6 +2,7 @@ import * as React from 'react';
 import "./dashboard.css";
 import DashboardNav from './DashboardNav';
 import Sidebar from './Sidebar';
+import { LocalStoreService } from '../../service/LocalStoreService';
 
 const webpush = require('web-push');
 
@@ -15,13 +16,21 @@ export default class Dashboard extends React.Component<{}, {}> {
         this.handleClick = this.handleClick.bind(this);
     }
 
+    // Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource 
+    // https://stackoverflow.com/questions/36662561/how-to-make-a-request-to-gcm-to-send-a-notification-via-xhr/36894224#36894224
+    // https://stackoverflow.com/questions/36691533/how-to-send-push-notifications-in-chromeprogressive-web-apps/36717282#36717282
     handleClick() {
         // VAPID keys should only be generated only once.
         //const vapidKeys = webpush.generateVAPIDKeys();
 
-        webpush.setGCMAPIKey('<Your GCM API Key Here>');
+        let ps = LocalStoreService.getSessionData("pushSubscription");
+
+        if(!ps)
+            return;
+
+        webpush.setGCMAPIKey('AIzaSyB7Y8HrhkHL9i778Pu1GNiC7Um5yc0H1oI');
         webpush.setVapidDetails(
-            'nick.gaudreau.ca@gmail.com',
+            'mailto:nick.gaudreau.ca@gmail.com',
             pubKey,
             privKey
 
@@ -31,15 +40,12 @@ export default class Dashboard extends React.Component<{}, {}> {
 
         // This is the same output of calling JSON.stringify on a PushSubscription
 
-        // see: https://developers.google.com/web/fundamentals/codelabs/push-notifications/
-        // @ Sending push messages
-        // Even better!! : https://developers.google.com/web/ilt/pwa/introduction-to-push-notifications
-        // @ Sending the message from the Server
+        // I did not verify if the subscibe would generate a subscription without FCM
         const pushSubscription = {
-            endpoint: '.....',
+            endpoint: ps.endpoint,
             keys: {
-                auth: '.....',
-                p256dh: '.....'
+                auth: ps.keys.auth,
+                p256dh: ps.keys.p256dh
             }
         };
 
@@ -48,7 +54,17 @@ export default class Dashboard extends React.Component<{}, {}> {
             title: "testTitle"
         }
 
-        webpush.sendNotification(pushSubscription, payload);
+        // valid options are ['headers', 'gcmAPIKey', 'vapidDetails', 'TTL', 'contentEncoding', 'proxy']
+        let options = {
+            TTL: 60,
+            headers: {
+                'Access-Control-Allow-Origin': '*', // attempt to bypass error
+                'Content-Type': 'application/json',
+                'Authorization': 'AIzaSyB7Y8HrhkHL9i778Pu1GNiC7Um5yc0H1oI'
+              }
+        }
+
+        webpush.sendNotification(pushSubscription, JSON.stringify(payload), options);
     }
 
     public render() {

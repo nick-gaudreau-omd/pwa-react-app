@@ -58,7 +58,7 @@ export default class Survey extends React.Component<{match:any},  {currentStep:n
     let key = e.target.name;
     
     if(LocalStoreService)
-      LocalStoreService.persistData(val, key);
+      LocalStoreService.persistData(key, val);
 
     console.log(key);
     console.log(val);
