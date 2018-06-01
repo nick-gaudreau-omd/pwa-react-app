@@ -156,3 +156,12 @@ self.addEventListener('notificationclick', evt => {
             break;
     }
 });
+
+self.addEventListener('push', function(evt){ 
+    data = evt.data.json(); 
+    evt.waitUntil(self.registration.showNotification(data.title, {
+        body: data.body,
+        icon: "/android-chrome-192x192.png",
+        badge: "/favicon-32x32.png"
+    }));  
+}); 
