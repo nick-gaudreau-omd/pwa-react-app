@@ -46,7 +46,12 @@ self.addEventListener('fetch', function (event) {
     // ignore chrome ext 
     if(event.request.url.indexOf('chrome-extension') > -1){
         return false;
-    }    
+    }
+    
+    // ignore api calls
+    if(event.request.url.indexOf('api/webpush') > -1){
+        return false;
+    }
     console.log(event.request);
 
     if (navigator.onLine){
@@ -111,8 +116,6 @@ function fetchAndUpdate(request) {
 
 
 /* Notifications */
-
-// initial on load notif - to be removed or only show after add to home screen.
 self.registration.showNotification("Welcome to Offline News", {
     body: "Save news for later read and/or once a page has been visited, it is available offline.",
     image: "/ss-network-falling-back-to-cache.png",
@@ -129,14 +132,8 @@ self.registration.showNotification("Welcome to Offline News", {
     tag: 'onload'
 });
 
-// work fine - Push api server trigger break point client
-self.addEventListener('push', function(evt){
-    data = evt.data.json();
-    console.log(data);    
-});
-
 self.addEventListener('notificationclose', evt => {
-    // do somthing... ping goole analytics see if user intereacted with notif
+    // do somthing... ping ggole analytics see if user intereacted with notif
     console.log('notificationclose');
 });
 
