@@ -115,22 +115,25 @@ function fetchAndUpdate(request) {
 }
 
 
-/* Notifications */
-self.registration.showNotification("Welcome to Offline News", {
-    body: "Save news for later read and/or once a page has been visited, it is available offline.",
-    image: "/ss-network-falling-back-to-cache.png",
-    icon: "/android-chrome-192x192.png",
-    badge: "/favicon-32x32.png",
-    actions:[
-        {
-            action: "ok", title: "Ok", icon: "/favicon-32x32.png"
-        },
-        {
-            action: "survey", title: "Survey", icon: "/favicon-32x32.png"
-        }
-    ],
-    tag: 'onload'
+/* Notifications on add to home screen */
+self.addEventListener('appinstalled', (evt) => {
+    self.registration.showNotification("Welcome to Offline News", {
+        body: "Save news for later read and/or once a page has been visited, it is available offline.",
+        image: "/ss-network-falling-back-to-cache.png",
+        icon: "/android-chrome-192x192.png",
+        badge: "/favicon-32x32.png",
+        actions:[
+            {
+                action: "ok", title: "Ok", icon: "/favicon-32x32.png"
+            },
+            {
+                action: "survey", title: "Survey", icon: "/favicon-32x32.png"
+            }
+        ],
+        tag: 'onload'
+    });
 });
+
 
 self.addEventListener('notificationclose', evt => {
     // do somthing... ping ggole analytics see if user intereacted with notif
@@ -157,6 +160,7 @@ self.addEventListener('notificationclick', evt => {
     }
 });
 
+/* Notifications managed from admin dashboard */
 self.addEventListener('push', function(evt){ 
     data = evt.data.json(); 
     evt.waitUntil(self.registration.showNotification(data.title, {
