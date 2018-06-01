@@ -2,6 +2,8 @@ import * as React from 'react';
 import * as FontAwesome from 'react-icons/lib/fa';
 import Util from '../Util';
 import { LocalStoreService } from '../service/LocalStoreService';
+import { IWebPushService } from '../service/IWebPushService';
+import { WebPushService } from '../service/WebPushService';
 // bypass transpiler error for known type : interface Notification extends EventTarget
 declare var Notification: any; // C:\Program Files\Microsoft VS Code\resources\app\extensions\node_modules\typescript\lib\lib.dom.d.ts
 
@@ -9,12 +11,14 @@ const pubKey = "BDL1okxySceuOI-i-4KMTDDRymnDtL_JTIzQyBHKkrNT0WHlBXLlmHnYegRecNmM
 // ref dev code only => privKey: fkbcr5dRSi0UGJt2pQSzT-iH1b6cjt5Tu3ce02KOf1E
 
 export default class NotificationComponent extends React.Component<{}, {subscribed:boolean}> {
+    private readonly _webPushService:IWebPushService;
 
     constructor(props: any) {
         super(props);
         this.state = {
             subscribed: false
         }
+        this._webPushService = new WebPushService();
         this.hasSubscribed = this.hasSubscribed.bind(this);
         this.handleSubscriptionClick = this.handleSubscriptionClick.bind(this);
     }
@@ -54,7 +58,7 @@ export default class NotificationComponent extends React.Component<{}, {subscrib
                 if(pushSubscription !== null) { 
                     // UNSUBSCRIBE
                     // Suppose to remove subscription from user browser AND message server... 
-                    // AFTER TEST IT SEEMS THAT IT ONLY REMOVES MESSAGE SERVER, user browser will still be on allow
+                    // AFTER TEST IT SEEMS THAT IT ONLY REMOVES MESSAGE SERVER, user browser page setting will still be on allow
                     pushSubscription.unsubscribe(); 
                     
                     
@@ -69,17 +73,12 @@ export default class NotificationComponent extends React.Component<{}, {subscrib
                         applicationServerKey: Util.urlBase64ToUint8Array(pubKey)
                     }) 
                     // then sync our server... if we have one                
-                    // .then(
-                    //     s => fetch('api/subscription', {
-                    //         headers: {'Content-Type': 'application/json'},
-                    //         method: 'POST',
-                    //         credentials: 'same-origin',
-                    //         body: JSON.stringify(s)
-                    //     })
-                    // )
+                    .then(
+                        s => this._webPushService.storeSubscription(s)
+                    )
                     .then(res => {                        
                         // demo solution store locally
-                        LocalStoreService.persistData("pushSubscription", res);
+                        // LocalStoreService.persistData("pushSubscription", res);
                         this.setState({subscribed : true});
                     });
                 }
