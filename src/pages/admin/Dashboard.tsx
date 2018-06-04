@@ -118,8 +118,23 @@ export default class Dashboard extends React.Component<{}, { title: string, body
     }
 
     async test(){
-        let test = await Util.getUniqueIdentifier();
-        console.log(test);
+        if('serviceWorker' in navigator && 'SyncManager' in window) {
+            navigator.serviceWorker.ready.then(
+                sw => {
+                    return sw.sync.register('dashboard-sync-test').then(x => {
+                        toast.success("Sync registered!", {
+                            position: "bottom-center",
+                            autoClose: 5000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true
+                        });
+
+                    });
+                }
+            )
+        }
     }
 
     public render() {
@@ -168,7 +183,7 @@ export default class Dashboard extends React.Component<{}, { title: string, body
                                     </div>
                                 </div>
                             </div>
-                            <ToastContainer />
+                            <ToastContainer draggablePercent={60} />
                         </main>
                     </div>
                 </div>

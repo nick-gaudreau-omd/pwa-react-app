@@ -108,7 +108,7 @@ export default class Survey extends React.Component<{match:any},  {currentStep:n
         { this.state.currentStep != FORM_STEPS ? <button className="btn btn-primary float-right" onClick={this._next}>Next</button> : ''} 
 
         { this.state.currentStep == FORM_STEPS ? <button className="btn btn-success float-right" onClick={this.notify}>Submit</button> : ''} 
-        <ToastContainer />
+        <ToastContainer draggablePercent={60} />
       </div>
     );
   }

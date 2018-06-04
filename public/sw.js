@@ -185,3 +185,8 @@ self.addEventListener('push', function(evt){
         ],
     }));  
 }); 
+
+/* Bg sync */
+self.addEventListener('sync', function(evt){ 
+    console.log(evt);
+}); 
