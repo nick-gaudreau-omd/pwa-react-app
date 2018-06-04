@@ -155,6 +155,14 @@ self.addEventListener('notificationclick', evt => {
                 )
             );
             break;
+        case 'news':
+            console.log('notificationclick => news');
+            evt.waitUntil(
+                clients.openWindow(
+                    `${evt.target.location.origin}/news/general`
+                )
+            );
+            break;
         default:
             break;
     }
@@ -166,6 +174,14 @@ self.addEventListener('push', function(evt){
     evt.waitUntil(self.registration.showNotification(data.title, {
         body: data.body,
         icon: "/android-chrome-192x192.png",
-        badge: "/favicon-32x32.png"
+        badge: "/favicon-32x32.png",
+        actions:[
+            {
+                action: "news", title: "Headlines"
+            },
+            {
+                action: "survey", title: "Survey"
+            }
+        ],
     }));  
 }); 
