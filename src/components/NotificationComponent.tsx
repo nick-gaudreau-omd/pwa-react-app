@@ -7,6 +7,7 @@ import { WebPushService } from '../service/WebPushService';
 // bypass transpiler error for known type : interface Notification extends EventTarget
 declare var Notification: any; // C:\Program Files\Microsoft VS Code\resources\app\extensions\node_modules\typescript\lib\lib.dom.d.ts
 
+// dev only - prod would need to be generated
 const pubKey = "BDL1okxySceuOI-i-4KMTDDRymnDtL_JTIzQyBHKkrNT0WHlBXLlmHnYegRecNmMQIOR06aR0wA1LOWlit75QlE";
 // ref dev code only => privKey: fkbcr5dRSi0UGJt2pQSzT-iH1b6cjt5Tu3ce02KOf1E
 
