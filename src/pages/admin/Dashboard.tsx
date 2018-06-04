@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import { IWebPushService } from '../../service/IWebPushService';
 import { WebPushService } from '../../service/WebPushService';
 import Util from '../../Util';
+const localforage = require("localforage");
 
 const webpush = require('web-push');
 
@@ -29,6 +30,15 @@ export default class Dashboard extends React.Component<{}, { title: string, body
         this.handleClick = this.handleClick.bind(this);
         this.handlePushNotification = this.handlePushNotification.bind(this);
         this.handleChange = this.handleChange.bind(this);
+    }
+
+    componentDidMount(){
+        localforage.config({
+            name        : 'Pwa-react-news-app',
+            version     : 10, // can't set v1 for whatever reason
+            storeName   : 'bgSyncTable', // Should be alphanumeric, with underscores.
+            description : 'pwa bg sync demo'
+        });
     }
 
     // FAIL attempt nodejs web push form browser
@@ -137,6 +147,16 @@ export default class Dashboard extends React.Component<{}, { title: string, body
         }
     }
 
+    testLocalForage(){
+        localforage.setItem('test', 'aValue1233').then(() => {
+            return localforage.getItem('test');
+          }).then( (value:any) => {
+            console.log(value)
+          }).catch( (err:any) =>  {
+            console.error(err);
+          });
+    }
+
     public render() {
 
         return (
@@ -153,7 +173,7 @@ export default class Dashboard extends React.Component<{}, { title: string, body
                                 <div className="btn-toolbar mb-2 mb-md-0">
                                     <div className="btn-group mr-2">
                                         <button className="btn btn-sm btn-outline-secondary" onClick={this.test} >Share</button>
-                                        <button className="btn btn-sm btn-outline-secondary" >Export</button>
+                                        <button className="btn btn-sm btn-outline-secondary" onClick={this.testLocalForage} >Export</button>
                                     </div>
                                     <button className="btn btn-sm btn-outline-secondary dropdown-toggle">
                                         <span data-feather="calendar"></span>

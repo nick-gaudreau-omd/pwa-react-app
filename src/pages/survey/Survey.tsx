@@ -7,16 +7,22 @@ import { ToastContainer, toast } from 'react-toastify';
 // import 'react-toastify/dist/ReactToastify.css';
 // minified version is also included
 import 'react-toastify/dist/ReactToastify.min.css';
+import { LocalForageService } from '../../service/LocalForageService';
 
 const FORM_STEPS = 3;
 
 export default class Survey extends React.Component<{match:any},  {currentStep:number}> {
+
+  private readonly _localForageService:LocalForageService;
 
   constructor(props: any) {
     super(props);    
     this.state = {
       currentStep : 1
     }
+
+    this._localForageService = new LocalForageService();
+
     this._next = this._next.bind(this);
     this._prev = this._prev.bind(this);
     this.childOnChangeListener = this.childOnChangeListener.bind(this);
@@ -57,34 +63,44 @@ export default class Survey extends React.Component<{match:any},  {currentStep:n
     let val = e.target.value;
     let key = e.target.name;
     
-    if(LocalStoreService)
-      LocalStoreService.persistData(key, val);
+    if(this._localForageService)
+      this._localForageService.storeData(key, val);
 
-    console.log(key);
-    console.log(val);
+    // console.log(key);
+    // console.log(val);
   }
 
   notify(){     
     let message = "😊 Thank you for filling our survey!";
     
     if(!navigator.onLine) {
-      message = "❗ You are offline... But good thing your inputs are stored locally. Don't close your browser/tab and try again later when you are online.";
-      toast.warn(message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true
-      });
-      toast.info("You can still navigate through the site.", {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true
-      });
+      if('serviceWorker' in navigator && 'SyncManager' in window) {
+        navigator.serviceWorker.ready.then(
+            sw => {
+                return sw.sync.register('dashboard-sync-test').then(x => {
+                  message = "❗ You are offline, but no worries. Don't close/terminate your browser/app and we will send your data when you're back online!";
+                  toast.warn(message, {
+                    position: "bottom-center",
+                    autoClose: 7000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true
+                  });
+                  toast.info("You can still navigate through the site in the meantime.", {
+                    position: "bottom-center",
+                    autoClose: 7000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true
+                  });
+
+                });
+            }
+        )
+      }
+      
     } else {
       toast.success(message, {
         position: "bottom-center",

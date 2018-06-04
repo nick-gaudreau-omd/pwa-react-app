@@ -189,4 +189,21 @@ self.addEventListener('push', function(evt){
 /* Bg sync */
 self.addEventListener('sync', function(evt){ 
     console.log(evt);
+    console.log("Data to be sent to server");
+    evt.waitUntil(
+        openIndexedDb().then( response =>{
+            var db = response.target.result;
+            var data = db.transaction(['BgSync_Survey'], 'readwrite').objectStore('BgSync_Survey');
+            console.log(data);
+        })
+    );
+    
 }); 
+
+function openIndexedDb(){
+    return new Promise((resolve, reject) => {
+        var idb = indexedDB.open('Pwa-react-news-app', 10);
+        idb.onsuccess = resolve;
+        idb.onerror = reject;
+    });
+}
