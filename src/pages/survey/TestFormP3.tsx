@@ -20,12 +20,16 @@ export default class TestFormP3 extends React.Component<IFormProps, {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  componentDidMount(){
+  async componentDidMount(){
+    let f =  await this.props.localforageService.getData("firstName");
+    let l =  await this.props.localforageService.getData("lastName");
+    let e =  await this.props.localforageService.getData("email");
+    
     this.setState({
-      firstName: LocalStoreService.getSessionData("firstName"),
-      lastName: LocalStoreService.getSessionData("lastName"),
-      email: LocalStoreService.getSessionData("email")
-    })
+      firstName: f,
+      lastName:l,
+      email: e
+    });
   }
 
   handleChange(e:any) {

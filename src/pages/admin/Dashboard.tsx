@@ -106,7 +106,8 @@ export default class Dashboard extends React.Component<{}, { title: string, body
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
-                draggable: true
+                draggable: true,
+                draggablePercent: 60
             });
         })
         .catch(error => {
@@ -116,7 +117,8 @@ export default class Dashboard extends React.Component<{}, { title: string, body
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
-                draggable: true
+                draggable: true,
+                draggablePercent: 60
               })
         })
     }
@@ -138,7 +140,8 @@ export default class Dashboard extends React.Component<{}, { title: string, body
                             hideProgressBar: false,
                             closeOnClick: true,
                             pauseOnHover: true,
-                            draggable: true
+                            draggable: true,
+                            draggablePercent: 60
                         });
 
                     });
@@ -203,7 +206,7 @@ export default class Dashboard extends React.Component<{}, { title: string, body
                                     </div>
                                 </div>
                             </div>
-                            <ToastContainer draggablePercent={60} />
+                            <ToastContainer />
                         </main>
                     </div>
                 </div>

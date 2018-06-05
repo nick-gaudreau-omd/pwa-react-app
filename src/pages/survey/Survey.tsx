@@ -93,7 +93,8 @@ export default class Survey extends React.Component<{match:any},  {currentStep:n
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
-                    draggable: true
+                    draggable: true,
+                    draggablePercent: 60
                   });
 
                 });
@@ -108,7 +109,8 @@ export default class Survey extends React.Component<{match:any},  {currentStep:n
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
-        draggable: true
+        draggable: true,
+        draggablePercent: 60
       });
     }
   }
@@ -116,15 +118,15 @@ export default class Survey extends React.Component<{match:any},  {currentStep:n
   public render() {
     return (
       <div className="container">
-        <TestFormP1 currentStep={this.state.currentStep} onChangeRef={this.childOnChangeListener} />
-        <TestFormP2 currentStep={this.state.currentStep} onChangeRef={this.childOnChangeListener} />  
-        <TestFormP3 currentStep={this.state.currentStep} onChangeRef={this.childOnChangeListener} />  
+        <TestFormP1 currentStep={this.state.currentStep} onChangeRef={this.childOnChangeListener} localforageService={this._localForageService} />
+        <TestFormP2 currentStep={this.state.currentStep} onChangeRef={this.childOnChangeListener}  localforageService={this._localForageService}/>  
+        <TestFormP3 currentStep={this.state.currentStep} onChangeRef={this.childOnChangeListener}  localforageService={this._localForageService}/>  
 
         { this.state.currentStep != 1 ? <button className="btn btn-primary" onClick={this._prev}>Prev</button> : ''}      
         { this.state.currentStep != FORM_STEPS ? <button className="btn btn-primary float-right" onClick={this._next}>Next</button> : ''} 
 
         { this.state.currentStep == FORM_STEPS ? <button className="btn btn-success float-right" onClick={this.notify}>Submit</button> : ''} 
-        <ToastContainer draggablePercent={60} />
+        <ToastContainer />
       </div>
     );
   }

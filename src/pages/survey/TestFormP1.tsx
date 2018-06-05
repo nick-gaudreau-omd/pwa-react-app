@@ -19,16 +19,20 @@ export default class TestFormP1 extends React.Component<IFormProps, {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  componentDidMount(){
+  async componentDidMount(){
+    let c =  await this.props.localforageService.getData("category");
+    let n =  await this.props.localforageService.getData("newsSite");
+    let s =  await this.props.localforageService.getData("search");
+    
     this.setState({
-      category: LocalStoreService.getSessionData("category"),
-      newsSite: LocalStoreService.getSessionData("newsSite"),
-      search: LocalStoreService.getSessionData("search")
-    })
+      category: c,
+      newsSite: n,
+      search: s
+    });
   }
 
   handleChange(e:any) {
-    
+    if(!e) return;
     this.props.onChangeRef(e);
     let obj = {};
     obj[e.target.name] = e.target.value;

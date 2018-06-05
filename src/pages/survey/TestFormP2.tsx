@@ -20,12 +20,16 @@ export default class TestFormP2 extends React.Component<IFormProps, {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  componentDidMount(){
+  async componentDidMount(){
+    let l =  await this.props.localforageService.getData("like");
+    let h =  await this.props.localforageService.getData("hate");
+    let t =  await this.props.localforageService.getData("toAdd");
+    
     this.setState({
-      like: LocalStoreService.getSessionData("like"),
-      hate: LocalStoreService.getSessionData("hate"),
-      toAdd: LocalStoreService.getSessionData("toAdd")
-    })
+      like: l,
+      hate: h,
+      toAdd: t
+    });
   }
 
   handleChange(e:any) {

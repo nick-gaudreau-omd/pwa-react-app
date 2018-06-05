@@ -11,14 +11,16 @@ export class LocalForageService {
         });
     }
 
-    public getData(key: string) {
-        localforage.getItem(key).then( (data:any) => {
-            if (data) {
-                return data;
-            } else {
-                return void 0;
-            }
+    public getData(key: string): Promise<any> {
+        return new Promise((resolve, reject) => {
+            localforage.getItem(key)
+            .then( (data:any) => {
+                if (data) {
+                    resolve(data);
+                } 
+            });
         });
+        
         
     }
 
