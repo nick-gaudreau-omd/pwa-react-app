@@ -11,6 +11,8 @@ const cachedAssets = [
     'offline-index.html'
 ];
 
+// this is if you use the Cache first pattern, 
+// then in fetch event you would return those resx if offline as a 1st check
 self.addEventListener('install', function (event) {
     event.waitUntil(
         caches.open(CACHE_VERSION)
