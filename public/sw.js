@@ -191,19 +191,41 @@ self.addEventListener('sync', function(evt){
     console.log(evt);
     console.log("Data to be sent to server");
     evt.waitUntil(
-        openIndexedDb().then( response =>{
+        openIndexedDb('Pwa-react-news-app', 10)
+        .then( response =>{
             var db = response.target.result;
-            var data = db.transaction(['BgSync_Survey'], 'readwrite').objectStore('BgSync_Survey');
-            console.log(data);
+            var rows = db.transaction(['BgSync_Survey'], 'readwrite').objectStore('BgSync_Survey');
+            getIdbStoreData(rows, r => r != '').then(data => {
+                console.log(data);
+            });
+            
         })
     );
     
 }); 
 
-function openIndexedDb(){
+function openIndexedDb(name, version){
     return new Promise((resolve, reject) => {
-        var idb = indexedDB.open('Pwa-react-news-app', 10);
+        var idb = indexedDB.open(name, version);
         idb.onsuccess = resolve;
         idb.onerror = reject;
+    });
+}
+
+function getIdbStoreData(objStoreRows, predicate){
+    return new Promise((resolve, reject) => {
+        var r = [];
+        function onsuccess(evt){
+            var cursor = evt.target.result;
+            if(cursor) {
+                if(predicate(cursor.value)) {
+                    r.push(cursor.value);
+                }
+                cursor.continue();
+            } else {
+                resolve(r);
+            }
+        }
+        objStoreRows.openCursor().onsuccess = onsuccess;
     });
 }
