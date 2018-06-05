@@ -115,23 +115,25 @@ function fetchAndUpdate(request) {
 }
 
 
-/* Notifications on add to home screen */
+/* Notifications after user accepted the prompt: add to home screen */
 self.addEventListener('appinstalled', (evt) => {
-    self.registration.showNotification("Welcome to Offline News", {
-        body: "Save news for later read and/or once a page has been visited, it is available offline.",
-        image: "/ss-network-falling-back-to-cache.png",
-        icon: "/android-chrome-192x192.png",
-        badge: "/favicon-32x32.png",
-        actions:[
-            {
-                action: "ok", title: "Ok", icon: "/favicon-32x32.png"
-            },
-            {
-                action: "survey", title: "Survey", icon: "/favicon-32x32.png"
-            }
-        ],
-        tag: 'onload'
-    });
+    evt.waitUntil(
+        self.registration.showNotification("Welcome to Offline News", {
+            body: "Save news for later read and/or once a page has been visited, it is available offline.",
+            image: "/ss-network-falling-back-to-cache.png",
+            icon: "/android-chrome-192x192.png",
+            badge: "/favicon-32x32.png",
+            actions:[
+                {
+                    action: "ok", title: "Ok", icon: "/favicon-32x32.png"
+                },
+                {
+                    action: "survey", title: "Survey", icon: "/favicon-32x32.png"
+                }
+            ],
+            tag: 'onload'
+        })
+    );
 });
 
 
@@ -229,3 +231,12 @@ function getIdbStoreData(objStoreRows, predicate){
         objStoreRows.openCursor().onsuccess = onsuccess;
     });
 }
+
+/* Chrome 68+ requires listen beforeinstallprompt  */
+self.addEventListener('beforeinstallprompt', (e) => {
+    // Prevent Chrome 67 and earlier from automatically showing the prompt - otherwise we will have 2 prompt
+    e.preventDefault();
+    
+    // trigger manually for 68+
+    e.prompt();
+});
