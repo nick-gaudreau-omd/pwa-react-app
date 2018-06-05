@@ -191,14 +191,25 @@ self.addEventListener('push', function(evt){
 /* Bg sync */
 self.addEventListener('sync', function(evt){ 
     console.log(evt);
-    console.log("Data to be sent to server");
+    console.log("SW is back online and will send data to the server . . .");
     evt.waitUntil(
         openIndexedDb('Pwa-react-news-app', 10)
         .then( response =>{
             var db = response.target.result;
             var rows = db.transaction(['BgSync_Survey'], 'readwrite').objectStore('BgSync_Survey');
             getIdbStoreData(rows, r => r != '').then(data => {
-                console.log(data);
+                //console.log(data);
+                // Mock api
+                fetch('https://jsonplaceholder.typicode.com/posts', {
+                    method: 'POST',
+                    body: JSON.stringify(data),
+                    headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                    }
+                })
+                .then(response => response.json())
+                .then(json => {console.log(json);console.log("Data has been sent sucessfully to the server!")})
+
             });
             
         })
