@@ -81,6 +81,8 @@ export default class NotificationComponent extends React.Component<{}, {subscrib
                         // demo solution store locally
                         // LocalStoreService.persistData("pushSubscription", res);
                         this.setState({subscribed : true});
+                    }).catch(error => {
+                        console.error(error);
                     });
                 }
             });

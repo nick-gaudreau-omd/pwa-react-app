@@ -14,7 +14,7 @@ class NavOffline extends React.Component<{}, {}> {
         caches.open('offline-react-web-app-v1.2')
             .then(c => c.keys())
             .then(keys => {
-                console.log(keys);
+                // console.log(keys);
 
                 let cachedApiRequestKeys = keys.filter(x => x.url.indexOf("category=") > -1);
 

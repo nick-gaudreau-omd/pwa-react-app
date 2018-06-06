@@ -1,19 +1,20 @@
 const CACHE_VERSION = 'offline-react-web-app-v1.2';
 
 const cachedAssets = [
-    'favicon.ico',
-    'favicon-32x32.png',
-    'favicon-16x16.png',
-    'safari-pinned-tab.svg',
-    'apple-touch-icon.png',
-    'offline/css/offline-main.css',
-    'offline/js/offline-main.js',
-    'offline-index.html'
+    '/favicon.ico',
+    '/favicon-32x32.png',
+    '/favicon-16x16.png',
+    '/safari-pinned-tab.svg',
+    '/apple-touch-icon.png',
+    '/offline/css/offline-main.css',
+    '/offline/js/offline-main.js',
+    '/offline-index.html'
 ];
 
-// this is if you use the Cache first pattern, 
-// then in fetch event you would return those resx if offline as a 1st check
 self.addEventListener('install', function (event) {
+
+    // this is if you use the Cache first pattern, 
+    // then in fetch event you would return those resx if offline as a 1st check
     event.waitUntil(
         caches.open(CACHE_VERSION)
             .then(function (cache) {
@@ -29,9 +30,9 @@ self.addEventListener('activate', function (event) {
   event.waitUntil(
     caches.keys() // get all keys
         .then(function (keys) {
-            console.log(keys);
+            // console.log(keys);
             return Promise.all(keys.filter(function (key) {
-                console.log(key);
+                // console.log(key);
                 return key !== CACHE_VERSION; // find all cache keys not in current version
             }).map(function (key) {
                 // create each delete promise base on above filtered returned nnon current version
@@ -54,7 +55,7 @@ self.addEventListener('fetch', function (event) {
     if(event.request.url.indexOf('api/webpush') > -1){
         return false;
     }
-    console.log(event.request);
+    // console.log(event.request);
 
     if (navigator.onLine){
         // get from network
@@ -63,13 +64,14 @@ self.addEventListener('fetch', function (event) {
     } else {
         event.respondWith(
             caches.match(event.request) // match for the request
-                .then(function (response) {    
-                    console.log(response);    
+                .then(function (response) { 
+                    console.log("offline - fetch from cache");   
+                    // console.log(response);    
                     if (response)
                         return response; // if there's a resp store in cache we return
                     else {  // offline and no cached response                       
                         caches.match(new Request('offline-index.html')).then(function (response) {    
-                            console.log(response);    
+                            //console.log(response);    
                             if (response)
                                 return response;
                             else // 
@@ -90,7 +92,7 @@ function fetchAndUpdate(request) {
     }
     return fetch(request)
         .then(function (response) {            
-            console.log(response); 
+            // console.log(response); 
             if (response) {
                 return caches.open(CACHE_VERSION)
                     .then(function (cache) {
