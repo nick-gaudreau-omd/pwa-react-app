@@ -1,5 +1,4 @@
 import * as React from 'react';
-import "./dashboard.css";
 
 export default class Sidebar extends React.Component<{}, {}> {
 

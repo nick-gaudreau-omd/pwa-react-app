@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Article } from '../../model/Article';
 import { NewsService } from '../../service/NewsService';
-import ArticleList from '../../components/ArticleList';
+import { ArticleList } from '../../components/article/ArticleList';
 import { NewsContainerState } from './ContainerState';
 import NotificationComponent from '../../components/NotificationComponent';
 //import { Redirect } from 'react-router';

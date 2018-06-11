@@ -1,5 +1,4 @@
 import * as React from 'react';
-import "./dashboard.css";
 import DashboardNav from './DashboardNav';
 import Sidebar from './Sidebar';
 import { LocalStoreService } from '../../service/LocalStoreService';
