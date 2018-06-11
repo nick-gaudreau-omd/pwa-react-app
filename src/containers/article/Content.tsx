@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Article } from '../../model/Article';
 import { ArticleContent } from '../../components/article/ArticleContent';
+import { IContainerProps } from '../IContainerProps';
 
-export default class ArticleContentContainer extends React.Component<{ match: any }, { article: Article }>{
+export default class ArticleContentContainer extends React.Component<IContainerProps, { article: Article }>{
   
   constructor(props: any) {
     super(props);

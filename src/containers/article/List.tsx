@@ -2,13 +2,14 @@ import * as React from 'react';
 import { Article } from '../../model/Article';
 import { NewsService } from '../../service/NewsService';
 import { ArticleList } from '../../components/article/ArticleList';
-import { IArticleStateContainer } from './IArticleState';
+import { IListState } from './IListState';
 import NotificationComponent from '../../components/NotificationComponent';
+import { IContainerProps } from '../IContainerProps';
 //import { Redirect } from 'react-router';
 
 const category_fallback = "GENERAL";
 
-export default class ArticleListContainer extends React.Component<{ match:any}, IArticleStateContainer> {
+export default class ArticleListContainer extends React.Component<IContainerProps, IListState> {
   private readonly _newsService: NewsService;
 
   constructor(props: any) {
