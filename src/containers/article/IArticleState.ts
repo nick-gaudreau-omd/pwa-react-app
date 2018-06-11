@@ -1,7 +1,7 @@
 import { Article } from "../../model/Article";
 
 
-export interface NewsContainerState{
+export interface IArticleStateContainer{
     articles: Article[];
     category:string;
 }
