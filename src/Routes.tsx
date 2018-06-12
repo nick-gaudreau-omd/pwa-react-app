@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import Survey from './pages/survey/Survey';
-import NewsContent from './pages/news/Content';
-import NewsContainer from './pages/news/Container';
-import Dashboard from './pages/admin/Dashboard';
+import Survey from './containers/survey/Survey';
+import ArticleContentContainer from './containers/article/Content';
+import ArticleListContainer from './containers/article/List';
+import Dashboard from './containers/admin/Dashboard';
 
 class Routes extends React.Component<{ }, {}> {
 
@@ -14,11 +14,11 @@ class Routes extends React.Component<{ }, {}> {
                     {/* {this.routeCollection} */}
                     {/* <Route exact={true} path='/' component={General} /> */}
                     {/* <Route path='/general/:category' render={ (props) => <General {...this.props} />  }  /> */}                    
-                    <Route path='/news/:category' component={NewsContainer} />
-                    <Route path='/content/:value' component={NewsContent} />
+                    <Route path='/news/:category' component={ArticleListContainer} />
+                    <Route path='/content/:value' component={ArticleContentContainer} />
                     <Route path='/survey' component={Survey} />
                     <Route path='/admin' component={Dashboard} />
-                    <Route path='/' component={NewsContainer} />
+                    <Route path='/' component={ArticleListContainer} />
                     <Redirect to="/" />
                 </Switch>
             </div>

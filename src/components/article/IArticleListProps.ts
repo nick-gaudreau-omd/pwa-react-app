@@ -1,7 +1,5 @@
 import { Article } from "../../model/Article";
 
-
-export interface NewsContainerState{
+export interface IArticleListProps {
     articles: Article[];
-    category:string;
 }
