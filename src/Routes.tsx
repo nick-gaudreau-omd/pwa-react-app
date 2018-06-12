@@ -3,7 +3,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import Survey from './pages/survey/Survey';
 import ArticleContentContainer from './containers/article/Content';
 import ArticleListContainer from './containers/article/List';
-import Dashboard from './pages/admin/Dashboard';
+import Dashboard from './containers/admin/Dashboard';
 
 class Routes extends React.Component<{ }, {}> {
 

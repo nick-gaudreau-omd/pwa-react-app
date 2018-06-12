@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Nav } from '../../components/Nav';
+import { Nav } from '../../components/nav/Nav';
 
 export default class NavOffline extends React.Component<{}, {}> {
     private navRef:any;

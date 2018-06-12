@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Routes from './Routes';
-import {Nav} from './components/Nav';
+import {Nav} from './components/nav/Nav';
 import NavOffline from './containers/nav/NavOffline';
 //import { Redirect } from 'react-router';
 //import { withRouter } from 'react-router-dom';
