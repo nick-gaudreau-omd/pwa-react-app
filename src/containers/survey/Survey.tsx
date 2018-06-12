@@ -2,16 +2,16 @@ import * as React from 'react';
 import TestFormP1  from './TestFormP1';
 import TestFormP2  from './TestFormP2';
 import TestFormP3  from './TestFormP3';
-import { LocalStoreService } from '../../service/LocalStoreService';
 import { ToastContainer, toast } from 'react-toastify';
 // import 'react-toastify/dist/ReactToastify.css';
 // minified version is also included
 import 'react-toastify/dist/ReactToastify.min.css';
 import { LocalForageService } from '../../service/LocalForageService';
+import { IContainerProps } from '../IContainerProps';
 
 const FORM_STEPS = 3;
 
-export default class Survey extends React.Component<{match:any},  {currentStep:number}> {
+export default class Survey extends React.Component<IContainerProps,  {currentStep:number}> {
 
   private readonly _localForageService:LocalForageService;
 
@@ -23,16 +23,52 @@ export default class Survey extends React.Component<{match:any},  {currentStep:n
 
     this._localForageService = new LocalForageService();
 
-    this._next = this._next.bind(this);
-    this._prev = this._prev.bind(this);
+    this.nextFormPage = this.nextFormPage.bind(this);
+    this.prevFormPage = this.prevFormPage.bind(this);
     this.childOnChangeListener = this.childOnChangeListener.bind(this);
   }
 
-  componentDidMount(){
+  componentDidMount() {
+    this.openIndexedDb('Pwa-react-news-app', 10)
+        .then( (response:any) => {
+            var db = response.target.result;
+            var rows = db.transaction(['BgSync_Survey'], 'readwrite').objectStore('BgSync_Survey');
+            this.getIdbStoreMap(rows, r => r != '').then(data => {
+
+              // TODO have Survey as Container, reloading state with indexedDB data for generic test form as presentation
+              console.log(data);
+            });
+        });
     console.log(this.props.match.params.id);
   }
 
-  private _next() {
+  public openIndexedDb(name:string, version:number) {
+    return new Promise((resolve, reject) => {
+        var idb = indexedDB.open(name, version);
+        idb.onsuccess = resolve;
+        idb.onerror = reject;
+    });
+  }
+
+  getIdbStoreMap(objStoreRows:any, predicate:any){
+    return new Promise((resolve, reject) => {
+        var r = new Map();
+        function onsuccess(evt:any){
+            var cursor = evt.target.result;
+            if(cursor) {
+                if(predicate(cursor.value)) {
+                    r.set(cursor.key,cursor.value);
+                }
+                cursor.continue();
+            } else {
+                resolve(r);
+            }
+        }
+        objStoreRows.openCursor().onsuccess = onsuccess;
+    });
+  }
+
+  private nextFormPage() {
     let currentStep = this.state.currentStep;
     // limit
     if (currentStep >= 2) {
@@ -46,7 +82,7 @@ export default class Survey extends React.Component<{match:any},  {currentStep:n
     });
   }
    
-  private _prev() {
+  private prevFormPage() {
     let currentStep = this.state.currentStep;
     if (currentStep <= 1) {
       currentStep = 1;
@@ -65,12 +101,9 @@ export default class Survey extends React.Component<{match:any},  {currentStep:n
     
     if(this._localForageService)
       this._localForageService.storeData(key, val);
-
-    // console.log(key);
-    // console.log(val);
   }
 
-  notify(){     
+  handleSubmit(){     
     let message = "😊 Thank you for filling our survey!";
     
     if(!navigator.onLine) {
@@ -103,6 +136,8 @@ export default class Survey extends React.Component<{match:any},  {currentStep:n
       }
       
     } else {
+      // TODO: send to server... 
+      // then ...
       toast.success(message, {
         position: "bottom-center",
         autoClose: 5000,
@@ -122,10 +157,10 @@ export default class Survey extends React.Component<{match:any},  {currentStep:n
         <TestFormP2 currentStep={this.state.currentStep} onChangeRef={this.childOnChangeListener}  localforageService={this._localForageService}/>  
         <TestFormP3 currentStep={this.state.currentStep} onChangeRef={this.childOnChangeListener}  localforageService={this._localForageService}/>  
 
-        { this.state.currentStep != 1 ? <button className="btn btn-primary" onClick={this._prev}>Prev</button> : ''}      
-        { this.state.currentStep != FORM_STEPS ? <button className="btn btn-primary float-right" onClick={this._next}>Next</button> : ''} 
+        { this.state.currentStep != 1 ? <button className="btn btn-primary" onClick={this.prevFormPage}>Prev</button> : ''}      
+        { this.state.currentStep != FORM_STEPS ? <button className="btn btn-primary float-right" onClick={this.nextFormPage}>Next</button> : ''} 
 
-        { this.state.currentStep == FORM_STEPS ? <button className="btn btn-success float-right" onClick={this.notify}>Submit</button> : ''} 
+        { this.state.currentStep == FORM_STEPS ? <button className="btn btn-success float-right" onClick={this.handleSubmit}>Submit</button> : ''} 
         <ToastContainer />
       </div>
     );

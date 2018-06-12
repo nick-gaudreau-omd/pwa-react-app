@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import Survey from './pages/survey/Survey';
+import Survey from './containers/survey/Survey';
 import ArticleContentContainer from './containers/article/Content';
 import ArticleListContainer from './containers/article/List';
 import Dashboard from './containers/admin/Dashboard';
