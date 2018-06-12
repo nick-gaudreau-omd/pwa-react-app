@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Article } from '../../model/Article';
-import { NewsService } from '../../service/NewsService';
+import { NewsApiService } from '../../service/NewsApiService';
 import { ArticleList } from '../../components/article/ArticleList';
 import { IListState } from './IListState';
 import NotificationComponent from '../../components/NotificationComponent';
@@ -10,11 +10,11 @@ import { IContainerProps } from '../IContainerProps';
 const category_fallback = "GENERAL";
 
 export default class ArticleListContainer extends React.Component<IContainerProps, IListState> {
-  private readonly _newsService: NewsService;
+  private readonly _newsService: NewsApiService;
 
   constructor(props: any) {
     super(props);
-    this._newsService = new NewsService();
+    this._newsService = new NewsApiService();
     this.state = {
       articles: [],
       category: ''

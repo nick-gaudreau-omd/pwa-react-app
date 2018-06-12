@@ -2,8 +2,8 @@ import axios from 'axios';
 import { NewsWrapper } from '../model/NewsWrapper';
 import { Article } from '../model/Article';
 
-export class NewsService {
-    private endpoint:string = "https://newsapi.org/v2/top-headlines?language=en&country=us&apiKey=9933f02648834737bc4dd4f7c48cba94&sortBy=publishedAt&category=";  
+export class NewsApiService {
+    private endpoint:string = "https://newsapi.org/v2/top-headlines?language=en&country=ca&apiKey=9933f02648834737bc4dd4f7c48cba94&sortBy=publishedAt&category=";  
     dataKey: string = "news";
 
     getByCategory(category = "general"): Promise<Article[]>{
